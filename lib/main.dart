@@ -39,10 +39,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SolidSecurityKeyCentralManager.instance;
 
-  // 20261102 gjw Read the saved feeds before the first frame, then start
-  // reading the news from them while the window opens.
+  // 20261102 gjw Read the saved feeds, and the stories dismissed, before the
+  // first frame, then start reading the news while the window opens.
 
   await feedList.load();
+  await news.load();
   news.refresh();
 
   // 20260913 gjw Open at the size the window was last left at, and keep that

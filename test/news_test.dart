@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:newspod/models/feed.dart';
 import 'package:newspod/models/story.dart';
+import 'package:newspod/services/dismissed_links.dart';
 import 'package:newspod/services/feed_list.dart';
 import 'package:newspod/services/news.dart';
 import 'package:newspod/utils/feed_parser.dart';
@@ -17,6 +18,10 @@ Story _story(String link, String source, int? day) => Story(
   source: source,
   published: day == null ? null : DateTime.utc(2026, 11, day),
 );
+
+// The dismissed stories with no Pod, as when not logged in.
+
+DismissedLinks _offline() => DismissedLinks(connected: () async => false);
 
 // Feeds as the fake fetcher answers them, by address.
 
@@ -39,7 +44,7 @@ void main() {
 
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
-    feeds = FeedList();
+    feeds = FeedList(connected: () async => false);
     for (final f in feeds.feeds) {
       await feeds.remove(f);
     }
@@ -48,7 +53,7 @@ void main() {
   });
 
   test('stories are merged newest first, once each, undated last', () async {
-    final news = News(feeds, _fetch);
+    final news = News(feeds, _fetch, _offline());
     await news.refresh();
 
     expect(news.stories.map((s) => s.link), ['two', 'one', 'undated']);
@@ -58,7 +63,7 @@ void main() {
   });
 
   test('a feed that fails is noted and the others still read', () async {
-    final news = News(feeds, _fetch);
+    final news = News(feeds, _fetch, _offline());
     await feeds.add(const Feed(url: 'https://bad.example/', title: 'Bad'));
     await news.refresh();
 
@@ -68,8 +73,35 @@ void main() {
     expect(news.stories, hasLength(3));
   });
 
+  test('a dismissed story stays out after a refresh, until restored', () async {
+    final news = News(feeds, _fetch, _offline());
+    await news.load();
+    await news.refresh();
+
+    await news.dismiss(news.stories.first);
+    expect(news.stories.map((s) => s.link), ['one', 'undated']);
+
+    await news.refresh();
+    expect(news.stories.map((s) => s.link), ['one', 'undated']);
+
+    await news.restore(_story('two', 'B', 2));
+    expect(news.stories.map((s) => s.link), ['two', 'one', 'undated']);
+  });
+
+  test('dismissed stories are remembered on the device', () async {
+    final news = News(feeds, _fetch, _offline());
+    await news.refresh();
+    await news.dismiss(news.stories.first);
+
+    final again = News(feeds, _fetch, _offline());
+    await again.load();
+    await again.refresh();
+
+    expect(again.stories.map((s) => s.link), ['one', 'undated']);
+  });
+
   test('changing the feeds reads the news again', () async {
-    final news = News(feeds, _fetch);
+    final news = News(feeds, _fetch, _offline());
     await news.refresh();
 
     await feeds.remove(feeds.feeds.last);

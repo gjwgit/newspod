@@ -21,6 +21,10 @@ then please show some ❤️ and tap on the star at
 This app is authored by [Graham
 Williams](https://togaware.com/Graham.Williams.html).
 
+## 0.2 Pod Synced News
+
++ Swipe away stories, feeds and swipes kept on the Pod [0.2.0 20261102 gjw]
+
 ## 0.1 A News Feed
 
 + News from RSS and Atom feeds, with feeds to add [0.1.0 20261102 gjw]

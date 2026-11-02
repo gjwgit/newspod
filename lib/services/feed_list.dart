@@ -25,65 +25,36 @@
 
 library;
 
-import 'dart:convert';
-
-import 'package:flutter/foundation.dart';
-
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:newspod/constants/default_feeds.dart';
 import 'package:newspod/models/feed.dart';
+import 'package:newspod/services/synced_list.dart';
 
-/// The feeds, saved on this device as they change. A new install starts with
-/// [defaultFeeds].
+/// The feeds, kept on this device and, when logged in, in feeds.ttl on the
+/// Pod, so every device subscribes to the same. A new install starts with
+/// [defaultFeeds] until the Pod's list is read.
 
-class FeedList extends ChangeNotifier {
-  static const _key = 'newspod_feeds';
-
-  List<Feed> _feeds = defaultFeeds;
+class FeedList extends SyncedList<Feed> {
+  FeedList({super.connected, super.read, super.write})
+    : super(
+        key: 'newspod_feeds',
+        file: 'feeds.ttl',
+        initial: defaultFeeds,
+        keyOf: (feed) => feed.url,
+        toJson: (feed) => feed.toJson(),
+        fromJson: (json) => Feed.fromJson(json as Map<String, dynamic>),
+      );
 
   /// The feeds, in the order they were added.
 
-  List<Feed> get feeds => List.unmodifiable(_feeds);
+  List<Feed> get feeds => items;
 
   /// Whether [url] is already one of the feeds.
 
-  bool contains(String url) => _feeds.any((feed) => feed.url == url);
-
-  /// Read the saved feeds, keeping the defaults when none are saved yet.
-
-  Future<void> load() async {
-    final saved = (await SharedPreferences.getInstance()).getString(_key);
-    if (saved == null) return;
-
-    _feeds = [
-      for (final json in jsonDecode(saved) as List)
-        Feed.fromJson(json as Map<String, dynamic>),
-    ];
-    notifyListeners();
-  }
-
-  /// Add [feed], at the end or back [at] where it was.
-
-  Future<void> add(Feed feed, {int? at}) =>
-      _save([..._feeds]..insert(at ?? _feeds.length, feed));
+  bool contains(String url) => containsKey(url);
 
   /// Remove [feed], returning where it was so it can be put back.
 
-  Future<int> remove(Feed feed) async {
-    final at = _feeds.indexWhere((f) => f.url == feed.url);
-    await _save([..._feeds]..removeAt(at));
-
-    return at;
-  }
-
-  Future<void> _save(List<Feed> feeds) async {
-    _feeds = feeds;
-    notifyListeners();
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_key, jsonEncode(feeds));
-  }
+  Future<int> remove(Feed feed) => removeKey(feed.url);
 }
 
 /// The app's one list of feeds.

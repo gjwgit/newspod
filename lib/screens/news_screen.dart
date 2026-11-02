@@ -28,11 +28,11 @@ library;
 import 'package:flutter/material.dart';
 
 import 'package:newspod/services/news.dart';
+import 'package:newspod/widgets/dismissible_story.dart';
 import 'package:newspod/widgets/feed_errors_note.dart';
-import 'package:newspod/widgets/story_tile.dart';
 
-/// The news list, pulled down to refresh, with a note at the top when a
-/// feed could not be read.
+/// The news list, pulled down to refresh and each story swiped left to
+/// remove it, with a note at the top when a feed could not be read.
 
 class NewsScreen extends StatelessWidget {
   const NewsScreen({super.key});
@@ -62,14 +62,13 @@ class NewsScreen extends StatelessWidget {
                       const Padding(
                         padding: EdgeInsets.all(32),
                         child: Text(
-                          'No stories yet. Add a feed under Feeds.',
+                          'No stories. Pull down for the latest, or add a '
+                          'feed under Feeds.',
                           textAlign: TextAlign.center,
                         ),
                       ),
-                    for (final story in news.stories) ...[
-                      StoryTile(story: story, now: now),
-                      const Divider(height: 1),
-                    ],
+                    for (final story in news.stories)
+                      DismissibleStory(story: story, now: now),
                   ],
                 ),
               ),

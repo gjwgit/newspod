@@ -15,13 +15,17 @@ its picture. Tap a story to read it in full on its own site. Pull the
 list down, or tap **Refresh**, for the latest. A new install starts
 with a few well known feeds, ABC News, BBC World, The Guardian and The
 Conversation. Under **Feeds** add any other feed by its address and
-remove any you do not want.
+remove any you do not want. Swipe a story left to remove it from the
+news.
 
 There is no account, no tracking and no algorithm deciding what you
-see: just the feeds you chose, newest first. Your feeds are kept on
-your device. Logging in to your own personal online data store (Pod)
-is optional, ready for features that keep your feeds and your reading
-private and encrypted on your own Pod. Pods are an innovation from the
+see: just the feeds you chose, newest first. Your feeds, and the
+stories you remove, are kept on your device. Logging in to your own
+personal online data store (Pod) is optional. When you do, they are
+kept on your Pod too, encrypted, so your phone and your desktop show
+the same feeds and the removed stories stay removed on both. Changes
+made while not logged in reach the Pod the next time you are. Pods
+are an innovation from the
 inventor of the World Wide Web, Sir Tim Berners-Lee. For more
 information visit the [Solid Project](https://solidproject.org).
 **You do not need a Solid Pod to use this app.**
@@ -48,8 +52,8 @@ own pages to read their feeds. Use NewsPod on a desktop or phone.
 
 ## Roadmap
 
-+ Keep the feeds, and which stories have been read, encrypted on your
-  own Pod, so every device shows the same news.
++ Keep which stories have been read on the Pod too, as the feeds and
+  the removed stories already are.
 
 + Mark stories as read, and save stories to read later.
 

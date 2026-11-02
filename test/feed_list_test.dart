@@ -15,18 +15,18 @@ void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
   test('a new install starts with the default feeds', () async {
-    final list = FeedList();
+    final list = FeedList(connected: () async => false);
     await list.load();
 
     expect(list.feeds.map((f) => f.url), defaultFeeds.map((f) => f.url));
   });
 
   test('added and removed feeds are saved and read back', () async {
-    final list = FeedList();
+    final list = FeedList(connected: () async => false);
     await list.add(_extra);
     await list.remove(defaultFeeds.first);
 
-    final again = FeedList();
+    final again = FeedList(connected: () async => false);
     await again.load();
 
     expect(again.contains(_extra.url), isTrue);
@@ -35,7 +35,7 @@ void main() {
   });
 
   test('a removed feed put back returns to where it was', () async {
-    final list = FeedList();
+    final list = FeedList(connected: () async => false);
     final second = defaultFeeds[1];
 
     final at = await list.remove(second);

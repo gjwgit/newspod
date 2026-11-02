@@ -54,8 +54,13 @@ class _HomeState extends State<Home> {
     _loadWebId();
   }
 
+  // 20261102 gjw Once logged in the feeds and the stories dismissed on other
+  // devices are fetched, and changes made here while logged out reach the
+  // Pod.
+
   Future<void> _loadWebId() async {
     final webId = await getWebId();
+    if (webId != null) news.sync();
     if (mounted) setState(() => _webId = webId);
   }
 
@@ -97,8 +102,9 @@ list, newest first. Tap a story to read it in full on its own site. Add and
 remove feeds under Feeds.
 
 There is no account, no tracking and no algorithm choosing what you see. Your
-feeds are kept on this device. Logging in to a Solid Pod is optional, ready
-for features that keep your feeds private and encrypted on your own Pod.
+feeds, and the stories you swipe away, are kept on this device. Logging in to
+a Solid Pod is optional. When you do, they are kept on your Pod too, encrypted,
+so every device shows the same feeds and the same stories stay away.
 
 **GitHub** [https://github.com/gjwgit/newspod](https://github.com/gjwgit/newspod)
 
@@ -111,7 +117,8 @@ for features that keep your feeds private and encrypted on your own Pod.
           icon: Icons.newspaper,
           tooltip:
               '**News**\n\nThe stories from all your feeds, newest first. '
-              'Tap one to read it on its own site.',
+              'Tap one to read it on its own site, or swipe it left to '
+              'remove it.',
           child: NewsScreen(),
         ),
         SolidMenuItem(

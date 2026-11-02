@@ -25,10 +25,13 @@
 
 library;
 
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import 'package:newspod/models/feed.dart';
 import 'package:newspod/models/story.dart';
+import 'package:newspod/services/dismissed_links.dart';
 import 'package:newspod/services/feed_list.dart';
 import 'package:newspod/services/fetch_feed.dart';
 import 'package:newspod/utils/feed_parser.dart';
@@ -38,20 +41,27 @@ import 'package:newspod/utils/feed_parser.dart';
 typedef FeedFetcher = Future<ParsedFeed> Function(String url, {String source});
 
 /// The news: every feed's stories in one list, newest first, read again on
-/// [refresh] and whenever the feeds change.
+/// [refresh] and whenever the feeds change. A story swiped away stays away,
+/// on this device and, through the Pod, on the others.
 
 class News extends ChangeNotifier {
-  News(this._feeds, [this._fetch = fetchFeed]) {
+  News(this._feeds, [this._fetch = fetchFeed, DismissedLinks? dismissed])
+    : _dismissed = dismissed ?? DismissedLinks() {
     _feeds.addListener(refresh);
+    _dismissed.addListener(_reshow);
   }
 
   final FeedList _feeds;
   final FeedFetcher _fetch;
+  final DismissedLinks _dismissed;
 
   Future<void>? _running;
   bool _again = false;
 
-  /// The stories, newest first, those without a date last.
+  List<Story> _all = const [];
+
+  /// The stories, newest first, those without a date last, less those
+  /// dismissed.
 
   List<Story> stories = const [];
 
@@ -62,6 +72,35 @@ class News extends ChangeNotifier {
   /// Whether the feeds are being read now.
 
   bool get loading => _running != null;
+
+  /// Read which stories were dismissed, before the first [refresh].
+
+  Future<void> load() => _dismissed.load();
+
+  /// Take [story] out of the news, and keep it out.
+
+  Future<void> dismiss(Story story) => _dismissed.add(story.link);
+
+  /// Put a dismissed [story] back in the news.
+
+  Future<void> restore(Story story) => _dismissed.remove(story.link);
+
+  /// Bring the feeds and the dismissed stories up to date with the Pod, as
+  /// on logging in.
+
+  Future<void> sync() => Future.wait([_feeds.sync(), _dismissed.sync()]);
+
+  // The dismissed stories changed, here or from the Pod.
+
+  void _reshow() {
+    stories = _shown();
+    notifyListeners();
+  }
+
+  List<Story> _shown() => [
+    for (final story in _all)
+      if (!_dismissed.contains(story.link)) story,
+  ];
 
   /// Read every feed again. A refresh asked for while one is running runs
   /// once more when it finishes, so a feed just added is not missed.
@@ -75,14 +114,21 @@ class News extends ChangeNotifier {
     return _running = _run();
   }
 
+  // 20261102 gjw A refresh also syncs the feeds and the dismissed stories
+  // with the Pod, so changes made on another device show here, and any
+  // queued here reach the Pod. The feeds changing then reads the news again.
+
   Future<void> _run() async {
     notifyListeners();
+    unawaited(_feeds.sync());
+    unawaited(_dismissed.sync());
 
     do {
       _again = false;
       final results = await Future.wait(_feeds.feeds.map(_read));
 
-      stories = _merge([for (final r in results) ...r.stories]);
+      _all = _merge([for (final r in results) ...r.stories]);
+      stories = _shown();
       errors = {for (final r in results) r.feed.url: ?r.error};
     } while (_again);
 
