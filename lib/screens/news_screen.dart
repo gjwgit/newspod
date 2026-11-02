@@ -31,8 +31,9 @@ import 'package:newspod/services/news.dart';
 import 'package:newspod/widgets/dismissible_story.dart';
 import 'package:newspod/widgets/feed_errors_note.dart';
 
-/// The news list, pulled down to refresh and each story swiped left to
-/// remove it, with a note at the top when a feed could not be read.
+/// The news list, pulled down to refresh and each story swiped right to
+/// keep it for later or left to remove it, with a note at the top when a
+/// feed could not be read.
 
 class NewsScreen extends StatelessWidget {
   const NewsScreen({super.key});

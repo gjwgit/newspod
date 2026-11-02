@@ -1,4 +1,4 @@
-/// The stories dismissed from the news, to bring back.
+/// The stories kept for later, or dismissed.
 //
 // Time-stamp: <>
 //
@@ -27,14 +27,25 @@ library;
 
 import 'package:flutter/material.dart';
 
+import 'package:newspod/models/story_place.dart';
 import 'package:newspod/services/news.dart';
 import 'package:newspod/widgets/dismissible_story.dart';
 
-/// The stories swiped out of the news that the feeds still have, newest
-/// first. Swiped right a story goes back to the news; tapped it opens.
+/// The stories kept for later, the latest kept first, or those swiped out of
+/// the news that the feeds still have, newest first, each swiped on as
+/// [DismissibleStory] says. Tapped a story opens. When there are none,
+/// [empty] says how a story gets here.
 
-class DismissedScreen extends StatelessWidget {
-  const DismissedScreen({super.key});
+class StoriesScreen extends StatelessWidget {
+  const StoriesScreen({super.key, required this.place, required this.empty});
+
+  /// Which stories, those kept for later or those dismissed.
+
+  final StoryPlace place;
+
+  /// What to say when there are none.
+
+  final String empty;
 
   @override
   Widget build(BuildContext context) {
@@ -42,20 +53,17 @@ class DismissedScreen extends StatelessWidget {
       listenable: news,
       builder: (context, _) {
         final now = DateTime.now();
+        final stories = place == StoryPlace.later ? news.later : news.dismissed;
 
         return ListView(
           children: [
-            if (news.dismissed.isEmpty)
-              const Padding(
-                padding: EdgeInsets.all(32),
-                child: Text(
-                  'Nothing dismissed. Swipe a story left in the News to '
-                  'dismiss it, and it is listed here until its feed drops it.',
-                  textAlign: TextAlign.center,
-                ),
+            if (stories.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(32),
+                child: Text(empty, textAlign: TextAlign.center),
               ),
-            for (final story in news.dismissed)
-              DismissibleStory(story: story, now: now, dismissed: true),
+            for (final story in stories)
+              DismissibleStory(story: story, now: now, place: place),
           ],
         );
       },

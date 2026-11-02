@@ -38,6 +38,17 @@ class Story {
     this.imageUrl,
   });
 
+  /// Read back a story saved with [toJson].
+
+  factory Story.fromJson(Map<String, dynamic> json) => Story(
+    title: json['title'] as String,
+    link: json['link'] as String,
+    source: json['source'] as String,
+    summary: json['summary'] as String? ?? '',
+    published: DateTime.tryParse(json['published'] as String? ?? ''),
+    imageUrl: json['imageUrl'] as String?,
+  );
+
   /// The headline.
 
   final String title;
@@ -61,4 +72,15 @@ class Story {
   /// A picture for the story, if the feed has one.
 
   final String? imageUrl;
+
+  /// The story as JSON, to save.
+
+  Map<String, Object> toJson() => {
+    'title': title,
+    'link': link,
+    'source': source,
+    if (summary.isNotEmpty) 'summary': summary,
+    'published': ?published?.toIso8601String(),
+    'imageUrl': ?imageUrl,
+  };
 }

@@ -31,12 +31,13 @@ import 'package:solidpod/solidpod.dart' show getWebId;
 import 'package:solidui/solidui.dart';
 
 import 'package:newspod/constants/app.dart';
-import 'package:newspod/screens/dismissed_screen.dart';
+import 'package:newspod/models/story_place.dart';
 import 'package:newspod/screens/feeds_screen.dart';
 import 'package:newspod/screens/news_screen.dart';
+import 'package:newspod/screens/stories_screen.dart';
 import 'package:newspod/services/news.dart';
 
-/// The scaffold: the News, Dismissed and Feeds pages, a Refresh button in
+/// The scaffold: the News, Later, Dismissed and Feeds pages, a Refresh button in
 /// the app bar, and the login status for the optional Pod.
 
 class Home extends StatefulWidget {
@@ -55,8 +56,8 @@ class _HomeState extends State<Home> {
     _loadWebId();
   }
 
-  // 20261102 gjw Once logged in the feeds and the stories dismissed on other
-  // devices are fetched, and changes made here while logged out reach the
+  // 20261102 gjw Once logged in the feeds, and the stories dismissed and kept
+  // for later on other devices, are fetched, and changes made here while logged out reach the
   // Pod.
 
   Future<void> _loadWebId() async {
@@ -99,13 +100,15 @@ class _HomeState extends State<Home> {
         applicationLegalese: '© 2026 Togaware Pty Ltd',
         text: """
 NewsPod gathers the stories from the RSS and Atom feeds you choose into one
-list, newest first. Tap a story to read it in full on its own site. Add and
-remove feeds under Feeds.
+list, newest first. Tap a story to read it in full on its own site. Swipe it
+right to keep it for later, or left to remove it. Find, add and remove feeds
+under Feeds.
 
 There is no account, no tracking and no algorithm choosing what you see. Your
-feeds, and the stories you swipe away, are kept on this device. Logging in to
-a Solid Pod is optional. When you do, they are kept on your Pod too, encrypted,
-so every device shows the same feeds and the same stories stay away.
+feeds, and the stories you keep and swipe away, are kept on this device.
+Logging in to a Solid Pod is optional. When you do, they are kept on your Pod
+too, encrypted, so every device shows the same feeds, the same stories kept
+for later, and the same stories stay away.
 
 **GitHub** [https://github.com/gjwgit/newspod](https://github.com/gjwgit/newspod)
 
@@ -118,9 +121,23 @@ so every device shows the same feeds and the same stories stay away.
           icon: Icons.newspaper,
           tooltip:
               '**News**\n\nThe stories from all your feeds, newest first. '
-              'Tap one to read it on its own site, or swipe it left to '
-              'remove it.',
+              'Tap one to read it on its own site, swipe it right to keep '
+              'it for later, or swipe it left to remove it.',
           child: NewsScreen(),
+        ),
+        SolidMenuItem(
+          title: 'Later',
+          icon: Icons.watch_later_outlined,
+          tooltip:
+              '**Later**\n\nThe stories swiped right in the news, kept even '
+              'after their feeds drop them. Swipe one right to put it back in '
+              'the news, or left to remove it.',
+          child: StoriesScreen(
+            place: StoryPlace.later,
+            empty:
+                'Nothing kept for later. Swipe a story right in the News to '
+                'keep it here, even after its feed drops it.',
+          ),
         ),
         SolidMenuItem(
           title: 'Dismissed',
@@ -129,14 +146,19 @@ so every device shows the same feeds and the same stories stay away.
               '**Dismissed**\n\nThe stories swiped out of the news, while '
               'their feeds still have them. Swipe one right to bring it back '
               'to the news.',
-          child: DismissedScreen(),
+          child: StoriesScreen(
+            place: StoryPlace.dismissed,
+            empty:
+                'Nothing dismissed. Swipe a story left in the News to '
+                'dismiss it, and it is listed here until its feed drops it.',
+          ),
         ),
         SolidMenuItem(
           title: 'Feeds',
           icon: Icons.rss_feed,
           tooltip:
-              '**Feeds**\n\nThe feeds the news comes from. Add a feed by its '
-              'address, or remove one.',
+              '**Feeds**\n\nThe feeds the news comes from. Find a feed by a '
+              'site\'s address or by words, add it, or remove one.',
           child: FeedsScreen(),
         ),
       ],

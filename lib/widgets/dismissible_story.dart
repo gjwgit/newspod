@@ -1,4 +1,4 @@
-/// A story that can be swiped left out of the news.
+/// A story that can be swiped from one list to another.
 //
 // Time-stamp: <>
 //
@@ -30,19 +30,21 @@ import 'package:flutter/material.dart';
 import 'package:solidui/solidui.dart';
 
 import 'package:newspod/models/story.dart';
+import 'package:newspod/models/story_place.dart';
 import 'package:newspod/services/news.dart';
 import 'package:newspod/widgets/story_tile.dart';
 
-/// [story] in the news list, with the divider beneath it. Swiped left it is
-/// removed, for good, with Undo to bring it back. In the list of [dismissed]
-/// stories it is swiped right instead, to bring it back to the news.
+/// [story] in the list for [place], with the divider beneath it. In the news
+/// it is swiped right to keep it for later and left to remove it. Kept for
+/// later it is swiped right back to the news and left to remove it.
+/// Dismissed it is swiped right back to the news. Each has Undo.
 
 class DismissibleStory extends StatelessWidget {
   const DismissibleStory({
     super.key,
     required this.story,
     required this.now,
-    this.dismissed = false,
+    this.place = StoryPlace.news,
   });
 
   /// The story to show.
@@ -53,50 +55,82 @@ class DismissibleStory extends StatelessWidget {
 
   final DateTime now;
 
-  /// Whether the story is listed under Dismissed, to be brought back.
+  /// The list the story is shown in.
 
-  final bool dismissed;
+  final StoryPlace place;
 
-  void _swiped(BuildContext context) {
-    if (dismissed) {
-      news.restore(story);
-    } else {
-      news.dismiss(story);
-    }
+  // Where a swipe right, then a swipe left, takes a story from each list.
+
+  static const _moves = {
+    StoryPlace.news: (StoryPlace.later, StoryPlace.dismissed),
+    StoryPlace.later: (StoryPlace.news, StoryPlace.dismissed),
+    StoryPlace.dismissed: (StoryPlace.news, null),
+  };
+
+  void _swiped(BuildContext context, StoryPlace to) {
+    news.move(story, to);
 
     showPositiveSnackBar(
       context,
-      dismissed ? 'Back in the news.' : 'Removed from the news.',
+      switch (to) {
+        StoryPlace.news => 'Back in the news.',
+        StoryPlace.later => 'Kept for later.',
+        StoryPlace.dismissed => 'Removed from the news.',
+      },
       actionLabel: 'Undo',
-      onAction: () => dismissed ? news.dismiss(story) : news.restore(story),
+      onAction: () => news.move(story, place),
+    );
+  }
+
+  Widget _background(BuildContext context, StoryPlace to, Alignment side) {
+    final colours = Theme.of(context).colorScheme;
+    final (back, fore, icon) = switch (to) {
+      StoryPlace.news => (
+        colours.primaryContainer,
+        colours.onPrimaryContainer,
+        Icons.restore,
+      ),
+      StoryPlace.later => (
+        colours.tertiaryContainer,
+        colours.onTertiaryContainer,
+        Icons.watch_later_outlined,
+      ),
+      StoryPlace.dismissed => (
+        colours.errorContainer,
+        colours.onErrorContainer,
+        Icons.delete_outline,
+      ),
+    };
+
+    return ColoredBox(
+      color: back,
+      child: Align(
+        alignment: side,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Icon(icon, color: fore),
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final colours = Theme.of(context).colorScheme;
+    final (right, left) = _moves[place]!;
 
     return Dismissible(
       key: ValueKey(story.link),
-      direction: dismissed
+      direction: left == null
           ? DismissDirection.startToEnd
-          : DismissDirection.endToStart,
-      onDismissed: (_) => _swiped(context),
-      background: ColoredBox(
-        color: dismissed ? colours.primaryContainer : colours.errorContainer,
-        child: Align(
-          alignment: dismissed ? Alignment.centerLeft : Alignment.centerRight,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Icon(
-              dismissed ? Icons.restore : Icons.delete_outline,
-              color: dismissed
-                  ? colours.onPrimaryContainer
-                  : colours.onErrorContainer,
-            ),
-          ),
-        ),
+          : DismissDirection.horizontal,
+      onDismissed: (direction) => _swiped(
+        context,
+        direction == DismissDirection.startToEnd ? right : left!,
       ),
+      background: _background(context, right, Alignment.centerLeft),
+      secondaryBackground: left == null
+          ? null
+          : _background(context, left, Alignment.centerRight),
       child: Column(
         children: [
           StoryTile(story: story, now: now),
