@@ -36,7 +36,12 @@ import 'package:newspod/utils/feed_parser.dart';
 
 /// Fetch the feed at [url] and read its stories, crediting them to [source].
 
-Future<ParsedFeed> fetchFeed(String url, {String source = ''}) async {
+Future<ParsedFeed> fetchFeed(String url, {String source = ''}) async =>
+    parseFeed(await fetchText(url), source: source);
+
+/// Fetch the text at [url], a feed, a web page or a search's answer.
+
+Future<String> fetchText(String url) async {
   final response = await http
       .get(
         Uri.parse(url),
@@ -54,10 +59,7 @@ Future<ParsedFeed> fetchFeed(String url, {String source = ''}) async {
     );
   }
 
-  return parseFeed(
-    utf8.decode(response.bodyBytes, allowMalformed: true),
-    source: source,
-  );
+  return utf8.decode(response.bodyBytes, allowMalformed: true);
 }
 
 /// Why a feed could not be read, as a sentence to show.

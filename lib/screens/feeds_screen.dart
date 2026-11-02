@@ -29,11 +29,11 @@ import 'package:flutter/material.dart';
 
 import 'package:newspod/services/feed_list.dart';
 import 'package:newspod/services/news.dart';
-import 'package:newspod/widgets/add_feed_field.dart';
 import 'package:newspod/widgets/feed_tile.dart';
+import 'package:newspod/widgets/find_feeds_field.dart';
 
 /// The feeds the news is gathered from, each marked when it could not be
-/// read, and a field to add another.
+/// read, and a field to find more.
 
 class FeedsScreen extends StatelessWidget {
   const FeedsScreen({super.key});
@@ -45,7 +45,7 @@ class FeedsScreen extends StatelessWidget {
       builder: (context, _) => ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const AddFeedField(),
+          const FindFeedsField(),
           const SizedBox(height: 16),
           for (final feed in feedList.feeds)
             FeedTile(feed: feed, error: news.errors[feed.url]),

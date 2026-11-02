@@ -8,16 +8,18 @@
 [![Last Updated](https://img.shields.io/github/last-commit/gjwgit/newspod?label=last%20updated)](https://github.com/gjwgit/newspod/commits/dev/)
 [![GitHub Issues](https://img.shields.io/github/issues/gjwgit/newspod)](https://github.com/gjwgit/newspod/issues)
 
-[NewsPod](https://gjwgit.github.io/newspod/) gathers the news from
-the RSS and Atom feeds you choose into one list, newest first, with
-each story's source, how long ago it was published, its summary and
-its picture. Tap a story to read it in full on its own site. Pull the
-list down, or tap **Refresh**, for the latest. A new install starts
-with a few well known feeds, ABC News, BBC World, The Guardian and The
-Conversation. Under **Feeds** add any other feed by its address and
-remove any you do not want. Swipe a story left to remove it from the
-news. **Dismissed** lists the stories removed, while their feeds still
-have them, and a swipe right brings one back.
+[NewsPod](https://gjwgit.github.io/newspod/) gathers the news from the
+RSS and Atom feeds you choose into one list, newest first, with each
+story's source, how long ago it was published, its summary and its
+picture. Tap a story to read it in full on its own site. Pull the list
+down, or tap **Refresh**, for the latest. A new install starts with a
+few well known feeds, ABC News, BBC World, The Guardian and The
+Conversation. Under **Feeds** find more: give a site's address to list
+the feeds it offers, or words to search for among the feeds followed on
+Feedly, and add those you want. Remove any you do not want. Swipe a
+story left to remove it from the news. **Dismissed** lists the stories
+removed, while their feeds still have them, and a swipe right brings one
+back.
 
 There is no account, no tracking and no algorithm deciding what you
 see: just the feeds you chose, newest first. Your feeds, and the
