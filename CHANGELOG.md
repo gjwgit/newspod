@@ -23,6 +23,7 @@ Williams](https://togaware.com/Graham.Williams.html).
 
 ## 0.2 Pod Synced News
 
++ In a browser explain why feeds fail and offer Install [0.2.2 20261102 gjw]
 + Dismissed lists stories swiped away, to swipe back [0.2.1 20261102 gjw]
 + Swipe away stories, feeds and swipes kept on the Pod [0.2.0 20261102 gjw]
 

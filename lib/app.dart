@@ -1,6 +1,6 @@
 /// The root of the widget tree: the theme and the optional Solid login.
 //
-// Time-stamp: <>
+// Time-stamp: <Monday 2026-11-02 15:03:07 +1100 Graham Williams>
 //
 /// Copyright (C) 2026, Togaware Pty Ltd
 ///
@@ -56,10 +56,6 @@ class App extends StatelessWidget {
         skipLogin: true,
         image: const AssetImage('assets/images/app_image.jpg'),
         logo: const AssetImage('assets/images/app_icon.png'),
-        continueButtonStyle: const ContinueButtonStyle(
-          visible: true,
-          text: 'News',
-        ),
         link: 'https://github.com/gjwgit/newspod/blob/dev/README.md',
         clientId: 'https://gjwgit.github.io/newspod/client-profile.jsonld',
 

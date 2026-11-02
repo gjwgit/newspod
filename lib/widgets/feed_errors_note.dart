@@ -25,21 +25,50 @@
 
 library;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
+import 'package:newspod/constants/app.dart';
+import 'package:newspod/utils/open_link.dart';
+
 /// Says at the top of the news that [count] feeds could not be read, and
-/// where to see why.
+/// where to see why. In a browser it says why there and then, since there
+/// almost every feed fails, and offers the install guide.
 
 class FeedErrorsNote extends StatelessWidget {
-  const FeedErrorsNote({super.key, required this.count});
+  const FeedErrorsNote({super.key, required this.count, this.web = kIsWeb});
 
   /// How many feeds failed.
 
   final int count;
 
+  /// Whether the app is running in a browser.
+
+  final bool web;
+
   @override
   Widget build(BuildContext context) {
     final colours = Theme.of(context).colorScheme;
+
+    // 20261102 gjw A news site serves its feed to any app, but tells a
+    // browser to let only the site's own pages read it (CORS), so in a
+    // browser the feeds fail however they are asked for.
+
+    if (web) {
+      return ListTile(
+        leading: Icon(Icons.info_outline, color: colours.error),
+        title: const Text('A browser cannot read most news feeds.'),
+        subtitle: const Text(
+          'News sites only allow their own web pages to read their feeds, '
+          'and the browser holds NewsPod to that. Install NewsPod on your '
+          'desktop, laptop or phone, where the feeds can be read.',
+        ),
+        trailing: TextButton(
+          onPressed: () => openLink(context, installGuideUrl),
+          child: const Text('Install'),
+        ),
+      );
+    }
 
     return ListTile(
       leading: Icon(Icons.info_outline, color: colours.error),

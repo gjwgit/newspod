@@ -43,6 +43,10 @@ const appDirectory = 'newspod';
 
 const seedColour = Color(0xFFB23A2E);
 
+/// The install guide, offered in a browser, where the feeds cannot be read.
+
+const installGuideUrl = 'https://gjwgit.github.io/newspod/INSTALL.html';
+
 /// The CHANGELOG, linked from the version shown in the app bar.
 
 const changelogUrl = 'https://github.com/gjwgit/newspod/blob/dev/CHANGELOG.md';
