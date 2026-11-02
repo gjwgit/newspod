@@ -1,0 +1,48 @@
+# Changes here will be overwritten by Copier. Change a value with
+# `copier update --data key=value` or by editing it here and running
+# `copier update`.
+_commit: v0.8.5
+_src_path: gh:gjwgit/fluttertmpl
+kind: app
+android: true
+app: newspod
+owner: gjwgit
+copyright: 2026, Togaware Pty Ltd
+publisher: Togaware Pty Ltd
+name: NewsPod
+summary: A privacy-first news feed reader
+comment: Simple, Private, Secure News Feed Reader
+categories:
+- Network
+- News
+keywords:
+- news
+- rss
+- atom
+- feed
+- reader
+- solid
+- pod
+build: {}
+deb:
+  section: news
+snap: {}
+windows:
+  appid: 45668776-A551-4E02-B523-8E452E8CAC96
+install:
+  folder: /var/www/html/web/installers/
+  host: solidcommunity.au
+  prod: true
+  url: https://solidcommunity.au/installers/
+stores: {}
+flatpak: null
+description: |
+  NewsPod gathers the news from the RSS and Atom feeds you choose into
+  one list, newest first, with each story's source, time and summary.
+  Tap a story to read it in full on its own site. Start with a few
+  well known feeds, then add your own and remove any you do not want.
+
+  The app needs no login and has no account, no tracking and no
+  algorithm deciding what you see. Your feeds are kept on your device.
+  A login to your Solid Pod is optional, ready for features that keep
+  your feeds and reading privately and encrypted on your own Pod.

@@ -1,0 +1,80 @@
+name: newspod
+description: "A privacy-first news feed reader."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.3
+
+# 20261102 gjw To automatically upgrade package dependencies:
+#
+#   flutter pub upgrade --major-versions
+#
+# To see which dependencies have newer versions available:
+#
+#   flutter pub outdated
+
+dependencies:
+  flutter:
+    sdk: flutter
+  html: ^0.15.6
+  http: ^1.6.0
+  intl: ^0.20.2
+  markdown_tooltip: ^0.0.10
+  shared_preferences: ^2.5.6
+  solidpod: ^1.1.2
+  solidui: ^1.5.15
+  url_launcher: ^6.3.3
+  window_manager: ^0.5.2
+  xml: ^7.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+
+  flutter_lints: ^6.0.0
+
+  # Generates the platform launcher icons from assets/images/app_icon.png.
+  # Re-run after changing the icon: dart run flutter_launcher_icons
+
+  flutter_launcher_icons: ^0.14.4
+
+flutter:
+  assets:
+    - assets/images/app_icon.png
+    - assets/images/app_image.jpg
+  uses-material-design: true
+
+# 20261102 gjw Define launcher icons for all platforms (except Linux)
+# so icons for the apps can be automatically updated using:
+#
+# `dart run flutter_launcher_icons`
+
+flutter_launcher_icons:
+  image_path: "assets/images/app_icon.png"
+  android: true
+  min_sdk_android: 21
+
+  # 20261102 gjw An ADAPTIVE icon, as for radiopod and timepod. Given only
+  # the square PNG, Android 8 and later shrink the whole icon onto a white
+  # plate. The background is the disk's brick red, the app's seed colour,
+  # so it fills the launcher's mask, and the foreground is the newspaper
+  # and its feed badge alone on transparency, inside the safe zone.
+
+  adaptive_icon_background: "#B23A2E"
+  adaptive_icon_foreground: "assets/images/app_icon_foreground.png"
+  ios: true
+  remove_alpha_ios: true
+  background_color_ios: "#ffffff"
+  macos:
+    generate: true
+  web:
+    generate: true
+  windows:
+    generate: true

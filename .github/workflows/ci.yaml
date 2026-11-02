@@ -1,0 +1,23 @@
+name: Lint Checks
+
+# From the gjwgit/fluttertmpl Copier template. The checks are in the
+# template's reusable ci.yaml, pinned here to the template version this
+# app was last updated to, so `make update` moves both together.
+#
+# Always run the checks on a push and a PR.
+
+on:
+  push:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  checks:
+    uses: gjwgit/fluttertmpl/.github/workflows/ci.yaml@v0.8.5
+
+    # link_checker opens an issue for broken links, and a called job
+    # cannot have more permissions than its caller.
+
+    permissions:
+      contents: read
+      issues: write

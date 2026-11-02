@@ -1,0 +1,41 @@
+name: Build Installers
+
+# From the gjwgit/fluttertmpl Copier template. The jobs are in the
+# template's reusable installers.yaml, pinned here to the template
+# version this app was last updated to, so `make update` moves both
+# together.
+#
+# The name and the push trigger stay here: installers/update.sh and `make
+# ginfo` find the runs by the "Build Installers" name, and the jobs test
+# the head commit message ("Bump version", "build deb", ...).
+
+on:
+  push:
+    branches:
+      - dev
+      - build
+      - installers
+
+jobs:
+  installers:
+    uses: gjwgit/fluttertmpl/.github/workflows/installers.yaml@v0.8.5
+
+    # The signing secrets each job skips without, and DART_SECRETS, the
+    # app's build.secrets from .copier-answers.yml as a JSON object for
+    # the scramble step. A secret's value must not hold a double quote.
+
+    secrets:
+      AC_API_ISSUER_ID: ${{ secrets.AC_API_ISSUER_ID }}
+      AC_API_KEY: ${{ secrets.AC_API_KEY }}
+      AC_API_KEY_ID: ${{ secrets.AC_API_KEY_ID }}
+      ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+      ANDROID_KEYSTORE_PWD: ${{ secrets.ANDROID_KEYSTORE_PWD }}
+      ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+      ANDROID_KEY_PWD: ${{ secrets.ANDROID_KEY_PWD }}
+      IOS_CERTIFICATE: ${{ secrets.IOS_CERTIFICATE }}
+      IOS_CERTIFICATE_PWD: ${{ secrets.IOS_CERTIFICATE_PWD }}
+      IOS_PROVISION_PROFILE: ${{ secrets.IOS_PROVISION_PROFILE }}
+      MACOS_DEVELOPER_ID_CERT: ${{ secrets.MACOS_DEVELOPER_ID_CERT }}
+      MACOS_DEVELOPER_ID_CERT_PWD: ${{ secrets.MACOS_DEVELOPER_ID_CERT_PWD }}
+      MACOS_DEVELOPER_ID_PROFILE: ${{ secrets.MACOS_DEVELOPER_ID_PROFILE }}
+      MACOS_KEYCHAIN_PWD: ${{ secrets.MACOS_KEYCHAIN_PWD }}

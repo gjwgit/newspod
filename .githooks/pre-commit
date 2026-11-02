@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# Dart Format
+
+printf "\e[33;1m%s\e[0m\n" 'Running dart format.'
+
+result=$(dart format lib)
+result_lines=$(echo "$result" | wc -l)
+
+if [ "$result_lines" -gt 1 ]; then
+  echo "$result"
+  printf "\e[31;1m%s\e[0m\n" 'Dart format applied changes, please commit again.'
+  exit 1
+fi
+
+echo "$result"
+printf "\e[32;1m%s\e[0m\n" 'Finished running dart format.'
+
+# 20261101 gjw No longer runs `make versions` on a 'Bump version'
+# commit. It read the message with `git log -1`, which before the commit
+# is made is the previous commit's message, so it ran on the commit after
+# a bump and missed the bump itself. Nor is it needed: the snapcraft.yaml
+# from the fluttertmpl Copier template reads its version from
+# pubspec.yaml at build time, and `make bump` still runs `make versions`
+# through `make prep` for the README of a package.
