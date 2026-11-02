@@ -11,25 +11,25 @@
 [NewsPod](https://gjwgit.github.io/newspod/) gathers the news from the
 RSS and Atom feeds you choose into one list, newest first, with each
 story's source, how long ago it was published, its summary and its
-picture. Tap a story to read it in full on its own site. Pull the list
-down, or tap **Refresh**, for the latest. A new install starts with a
-few well known feeds, ABC News, BBC World, The Guardian and The
-Conversation. Under **Feeds** find more: give a site's address to list
-the feeds it offers, or words to search for among the feeds followed on
-Feedly, and add those you want. Remove any you do not want. Swipe a
-story right to keep it under **Later**, even after its feed drops it, or
-left to remove it from the news. **Dismissed** lists the stories
-removed, while their feeds still have them, and a swipe right brings one
-back.
+picture. Tap a story to read it in full on its own site, and it moves to
+**Viewed**, the latest viewed first, to find again. Pull the list down,
+or tap **Refresh**, for the latest. A new install starts with a few well
+known feeds, ABC News, BBC World, The Guardian and The Conversation.
+Under **Feeds** find more: give a site's address to list the feeds it
+offers, or words to search for among the feeds followed on Feedly, and
+add those you want. Remove any you do not want. Swipe a story right to
+keep it under **Later**, even after its feed drops it, or left to remove
+it from the news. **Dismissed** lists the stories removed, while their
+feeds still have them, and a swipe right brings one back.
 
-There is no account, no tracking and no algorithm deciding what you
-see: just the feeds you chose, newest first. Your feeds, and the
-stories you keep and remove, are kept on your device. Logging in to
-your own personal online data store (Pod) is optional. When you do,
-they are kept on your Pod too, encrypted, so your phone and your
-desktop show the same feeds and the same stories kept for later, and
-the removed stories stay removed on both. Changes made while not
-logged in reach the Pod the next time you are. Pods
+There is no account, no tracking and no algorithm deciding what you see:
+just the feeds you chose, newest first. Your feeds, and the stories you
+keep, view and remove, are kept on your device. Logging in to your own
+personal online data store (Pod) is optional. When you do, they are kept
+on your Pod too, encrypted, so your phone and your desktop show the same
+feeds and the same stories kept for later and viewed, and the removed
+stories stay removed on both. Changes made while not logged in reach the
+Pod the next time you are. Pods
 are an innovation from the
 inventor of the World Wide Web, Sir Tim Berners-Lee. For more
 information visit the [Solid Project](https://solidproject.org).

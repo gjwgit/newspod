@@ -32,10 +32,16 @@ import 'package:newspod/utils/open_link.dart';
 import 'package:newspod/utils/time_ago.dart';
 
 /// A story: its source and age, headline and summary, and its picture when
-/// it has one. A tap opens the full story on its own site.
+/// it has one. A tap opens the full story on its own site, and then calls
+/// [onOpened].
 
 class StoryTile extends StatelessWidget {
-  const StoryTile({super.key, required this.story, required this.now});
+  const StoryTile({
+    super.key,
+    required this.story,
+    required this.now,
+    this.onOpened,
+  });
 
   /// The story to show.
 
@@ -44,6 +50,14 @@ class StoryTile extends StatelessWidget {
   /// The time the ages are reckoned from, the same for the whole list.
 
   final DateTime now;
+
+  /// What to do once the story has opened, if anything.
+
+  final VoidCallback? onOpened;
+
+  Future<void> _open(BuildContext context) async {
+    if (await openLink(context, story.link)) onOpened?.call();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +69,7 @@ class StoryTile extends StatelessWidget {
     ].where((s) => s.isNotEmpty).join(' · ');
 
     return InkWell(
-      onTap: () => openLink(context, story.link),
+      onTap: () => _open(context),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(

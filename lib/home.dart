@@ -37,7 +37,7 @@ import 'package:newspod/screens/news_screen.dart';
 import 'package:newspod/screens/stories_screen.dart';
 import 'package:newspod/services/news.dart';
 
-/// The scaffold: the News, Later, Dismissed and Feeds pages, a Refresh button in
+/// The scaffold: the News, Later, Viewed, Dismissed and Feeds pages, a Refresh button in
 /// the app bar, and the login status for the optional Pod.
 
 class Home extends StatefulWidget {
@@ -56,8 +56,8 @@ class _HomeState extends State<Home> {
     _loadWebId();
   }
 
-  // 20261102 gjw Once logged in the feeds, and the stories dismissed and kept
-  // for later on other devices, are fetched, and changes made here while logged out reach the
+  // 20261102 gjw Once logged in the feeds, and the stories dismissed, kept
+  // for later and viewed on other devices, are fetched, and changes made here while logged out reach the
   // Pod.
 
   Future<void> _loadWebId() async {
@@ -100,15 +100,15 @@ class _HomeState extends State<Home> {
         applicationLegalese: '© 2026 Togaware Pty Ltd',
         text: """
 NewsPod gathers the stories from the RSS and Atom feeds you choose into one
-list, newest first. Tap a story to read it in full on its own site. Swipe it
-right to keep it for later, or left to remove it. Find, add and remove feeds
+list, newest first. Tap a story to read it in full on its own site, and it
+moves to Viewed. Swipe it right to keep it for later, or left to remove it. Find, add and remove feeds
 under Feeds.
 
 There is no account, no tracking and no algorithm choosing what you see. Your
-feeds, and the stories you keep and swipe away, are kept on this device.
+feeds, and the stories you keep, view and swipe away, are kept on this device.
 Logging in to a Solid Pod is optional. When you do, they are kept on your Pod
 too, encrypted, so every device shows the same feeds, the same stories kept
-for later, and the same stories stay away.
+for later and viewed, and the same stories stay away.
 
 **GitHub** [https://github.com/gjwgit/newspod](https://github.com/gjwgit/newspod)
 
@@ -121,8 +121,8 @@ for later, and the same stories stay away.
           icon: Icons.newspaper,
           tooltip:
               '**News**\n\nThe stories from all your feeds, newest first. '
-              'Tap one to read it on its own site, swipe it right to keep '
-              'it for later, or swipe it left to remove it.',
+              'Tap one to read it on its own site, which moves it to Viewed. '
+              'Swipe it right to keep it for later, or left to remove it.',
           child: NewsScreen(),
         ),
         SolidMenuItem(
@@ -137,6 +137,20 @@ for later, and the same stories stay away.
             empty:
                 'Nothing kept for later. Swipe a story right in the News to '
                 'keep it here, even after its feed drops it.',
+          ),
+        ),
+        SolidMenuItem(
+          title: 'Viewed',
+          icon: Icons.history,
+          tooltip:
+              '**Viewed**\n\nThe stories opened from the news, the latest '
+              'first, kept even after their feeds drop them. Swipe one right '
+              'to put it back in the news, or left to remove it.',
+          child: StoriesScreen(
+            place: StoryPlace.viewed,
+            empty:
+                'Nothing viewed yet. A story opened from the News moves '
+                'here, to find again.',
           ),
         ),
         SolidMenuItem(

@@ -25,7 +25,8 @@
 
 library;
 
-/// The list a story is in: the news, kept for later, or dismissed. A story
-/// is in one only, and a swipe moves it to another.
+/// The list a story is in: the news, kept for later, viewed, or dismissed.
+/// A story is in one only. Opening it in the news moves it to viewed, and a
+/// swipe moves it to another.
 
-enum StoryPlace { news, later, dismissed }
+enum StoryPlace { news, later, viewed, dismissed }

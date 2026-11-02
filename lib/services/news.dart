@@ -35,7 +35,7 @@ import 'package:newspod/models/story_place.dart';
 import 'package:newspod/services/dismissed_links.dart';
 import 'package:newspod/services/feed_list.dart';
 import 'package:newspod/services/fetch_feed.dart';
-import 'package:newspod/services/later_stories.dart';
+import 'package:newspod/services/kept_stories.dart';
 import 'package:newspod/utils/feed_parser.dart';
 
 /// Reads a feed, given its address and the name to credit its stories to.
@@ -44,26 +44,35 @@ typedef FeedFetcher = Future<ParsedFeed> Function(String url, {String source});
 
 /// The news: every feed's stories in one list, newest first, read again on
 /// [refresh] and whenever the feeds change. A story swiped away stays away,
-/// and one kept for later stays kept, on this device and, through the Pod,
-/// on the others.
+/// and one kept for later or viewed stays kept, on this device and, through
+/// the Pod, on the others.
 
 class News extends ChangeNotifier {
   News(
     this._feeds, [
     this._fetch = fetchFeed,
     DismissedLinks? dismissed,
-    LaterStories? later,
+    KeptStories? later,
+    KeptStories? viewed,
   ]) : _dismissed = dismissed ?? DismissedLinks(),
-       _later = later ?? LaterStories() {
+       _later = later ?? KeptStories(name: 'later'),
+       _viewed = viewed ?? KeptStories(name: 'viewed', keep: 500) {
     _feeds.addListener(refresh);
     _dismissed.addListener(_reshow);
     _later.addListener(_reshow);
+    _viewed.addListener(_reshow);
   }
 
   final FeedList _feeds;
   final FeedFetcher _fetch;
   final DismissedLinks _dismissed;
-  final LaterStories _later;
+  final KeptStories _later;
+  final KeptStories _viewed;
+
+  Map<StoryPlace, KeptStories> get _kept => {
+    StoryPlace.later: _later,
+    StoryPlace.viewed: _viewed,
+  };
 
   Future<void>? _running;
   bool _again = false;
@@ -71,7 +80,7 @@ class News extends ChangeNotifier {
   List<Story> _all = const [];
 
   /// The stories, newest first, those without a date last, less those
-  /// dismissed or kept for later.
+  /// dismissed, kept for later or viewed.
 
   List<Story> stories = const [];
 
@@ -85,6 +94,11 @@ class News extends ChangeNotifier {
 
   List<Story> get later => _later.items.reversed.toList();
 
+  /// The stories opened from the news, the latest viewed first, whether or
+  /// not the feeds still have them.
+
+  List<Story> get viewed => _viewed.items.reversed.toList();
+
   /// Why each feed that could not be read failed, by its address.
 
   Map<String, String> errors = const {};
@@ -93,10 +107,11 @@ class News extends ChangeNotifier {
 
   bool get loading => _running != null;
 
-  /// Read which stories were dismissed and kept for later, before the first
-  /// [refresh].
+  /// Read which stories were dismissed, kept for later and viewed, before
+  /// the first [refresh].
 
-  Future<void> load() => Future.wait([_dismissed.load(), _later.load()]);
+  Future<void> load() =>
+      Future.wait([_dismissed.load(), _later.load(), _viewed.load()]);
 
   /// Move [story] to [place], out of the list it was in.
 
@@ -107,22 +122,30 @@ class News extends ChangeNotifier {
     // story is never shown in two lists, or back in the news, in between.
 
     return Future.wait([
-      if (place != StoryPlace.later && _later.contains(link))
-        _later.remove(link),
-      if (place != StoryPlace.dismissed && _dismissed.contains(link))
+      for (final MapEntry(key: at, value: kept) in _kept.entries)
+        if (at == place)
+          kept.add(story)
+        else if (kept.contains(link))
+          kept.remove(link),
+      if (place == StoryPlace.dismissed)
+        _dismissed.add(link)
+      else if (_dismissed.contains(link))
         _dismissed.remove(link),
-      if (place == StoryPlace.later) _later.add(story),
-      if (place == StoryPlace.dismissed) _dismissed.add(link),
     ]);
   }
 
-  /// Bring the feeds, and the stories dismissed and kept for later, up to
-  /// date with the Pod, as on logging in.
+  /// Bring the feeds, and the stories dismissed, kept for later and viewed,
+  /// up to date with the Pod, as on logging in.
 
-  Future<void> sync() =>
-      Future.wait([_feeds.sync(), _dismissed.sync(), _later.sync()]);
+  Future<void> sync() => Future.wait([
+    _feeds.sync(),
+    _dismissed.sync(),
+    _later.sync(),
+    _viewed.sync(),
+  ]);
 
-  // The stories dismissed or kept for later changed, here or from the Pod.
+  // The stories dismissed, kept for later or viewed changed, here or from
+  // the Pod.
 
   void _reshow() {
     _split();
@@ -132,7 +155,8 @@ class News extends ChangeNotifier {
   void _split() {
     stories = [
       for (final story in _all)
-        if (!_dismissed.contains(story.link) && !_later.contains(story.link))
+        if (!_dismissed.contains(story.link) &&
+            !_kept.values.any((kept) => kept.contains(story.link)))
           story,
     ];
     dismissed = [
@@ -153,8 +177,8 @@ class News extends ChangeNotifier {
     return _running = _run();
   }
 
-  // 20261102 gjw A refresh also syncs the feeds, and the stories dismissed
-  // and kept for later, with the Pod, so changes made on another device show
+  // 20261102 gjw A refresh also syncs the feeds, and the stories dismissed,
+  // kept for later and viewed, with the Pod, so changes made on another device show
   // here, and any queued here reach the Pod. The feeds changing then reads
   // the news again.
 

@@ -144,6 +144,22 @@ void main() {
     await _barGone(tester);
   });
 
+  testWidgets('under Viewed, swiped right the story goes back to the news, '
+      'and Undo views it again', (tester) async {
+    await news.move(_story, StoryPlace.viewed);
+    await _show(tester, StoryPlace.viewed);
+    await _swipe(tester, 600);
+
+    expect(find.text('Back in the news.'), findsOneWidget);
+    expect(news.viewed, isEmpty);
+
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(news.viewed.single.link, _story.link);
+
+    await _barGone(tester);
+  });
+
   testWidgets('under Dismissed, swiped right the story goes back to the '
       'news, and Undo dismisses it again', (tester) async {
     await news.move(_story, StoryPlace.dismissed);

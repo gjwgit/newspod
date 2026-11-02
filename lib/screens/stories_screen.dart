@@ -1,4 +1,4 @@
-/// The stories kept for later, or dismissed.
+/// The stories kept for later, viewed, or dismissed.
 //
 // Time-stamp: <>
 //
@@ -31,15 +31,15 @@ import 'package:newspod/models/story_place.dart';
 import 'package:newspod/services/news.dart';
 import 'package:newspod/widgets/dismissible_story.dart';
 
-/// The stories kept for later, the latest kept first, or those swiped out of
-/// the news that the feeds still have, newest first, each swiped on as
+/// The stories kept for later or viewed, the latest first, or those swiped
+/// out of the news that the feeds still have, newest first, each swiped on as
 /// [DismissibleStory] says. Tapped a story opens. When there are none,
 /// [empty] says how a story gets here.
 
 class StoriesScreen extends StatelessWidget {
   const StoriesScreen({super.key, required this.place, required this.empty});
 
-  /// Which stories, those kept for later or those dismissed.
+  /// Which stories, those kept for later, viewed or dismissed.
 
   final StoryPlace place;
 
@@ -53,7 +53,12 @@ class StoriesScreen extends StatelessWidget {
       listenable: news,
       builder: (context, _) {
         final now = DateTime.now();
-        final stories = place == StoryPlace.later ? news.later : news.dismissed;
+        final stories = switch (place) {
+          StoryPlace.news => news.stories,
+          StoryPlace.later => news.later,
+          StoryPlace.viewed => news.viewed,
+          StoryPlace.dismissed => news.dismissed,
+        };
 
         return ListView(
           children: [

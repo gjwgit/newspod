@@ -39,8 +39,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SolidSecurityKeyCentralManager.instance;
 
-  // 20261102 gjw Read the saved feeds, and the stories dismissed and kept
-  // for later, before the first frame, then start reading the news while the window opens.
+  // 20261102 gjw Read the saved feeds, and the stories dismissed, kept for
+  // later and viewed, before the first frame, then start reading the news while the window opens.
 
   await feedList.load();
   await news.load();

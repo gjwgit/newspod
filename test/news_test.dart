@@ -10,7 +10,7 @@ import 'package:newspod/models/story.dart';
 import 'package:newspod/models/story_place.dart';
 import 'package:newspod/services/dismissed_links.dart';
 import 'package:newspod/services/feed_list.dart';
-import 'package:newspod/services/later_stories.dart';
+import 'package:newspod/services/kept_stories.dart';
 import 'package:newspod/services/news.dart';
 import 'package:newspod/utils/feed_parser.dart';
 
@@ -27,7 +27,8 @@ News _news(FeedList feeds) => News(
   feeds,
   _fetch,
   DismissedLinks(connected: () async => false),
-  LaterStories(connected: () async => false),
+  KeptStories(name: 'later', connected: () async => false),
+  KeptStories(name: 'viewed', keep: 2, connected: () async => false),
 );
 
 // Feeds as the fake fetcher answers them, by address.
@@ -129,6 +130,27 @@ void main() {
 
     await again.move(again.later.single, StoryPlace.dismissed);
     expect(again.later, isEmpty);
+  });
+
+  test('a story viewed leaves the news, the latest viewed first, and only '
+      'the latest are kept', () async {
+    final news = _news(feeds);
+    await news.load();
+    await news.refresh();
+
+    for (final story in [...news.stories]) {
+      await news.move(story, StoryPlace.viewed);
+    }
+
+    // The oldest viewed is no longer kept, so it is back in the news while
+    // its feed has it.
+
+    expect(news.viewed.map((s) => s.link), ['undated', 'one']);
+    expect(news.stories.map((s) => s.link), ['two']);
+
+    await news.move(news.viewed.first, StoryPlace.later);
+    expect(news.viewed.map((s) => s.link), ['one']);
+    expect(news.later.map((s) => s.link), ['undated']);
   });
 
   test('changing the feeds reads the news again', () async {

@@ -30,13 +30,14 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Open [link] in the browser, or say in a dialog that it could not be.
+/// Answers whether it opened.
 
-Future<void> openLink(BuildContext context, String link) async {
+Future<bool> openLink(BuildContext context, String link) async {
   final uri = Uri.tryParse(link);
   final opened =
       uri != null && await launchUrl(uri, mode: LaunchMode.externalApplication);
 
-  if (opened || !context.mounted) return;
+  if (opened || !context.mounted) return opened;
 
   await showDialog<void>(
     context: context,
@@ -51,4 +52,6 @@ Future<void> openLink(BuildContext context, String link) async {
       ],
     ),
   );
+
+  return false;
 }

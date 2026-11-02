@@ -35,9 +35,10 @@ import 'package:newspod/services/news.dart';
 import 'package:newspod/widgets/story_tile.dart';
 
 /// [story] in the list for [place], with the divider beneath it. In the news
-/// it is swiped right to keep it for later and left to remove it. Kept for
-/// later it is swiped right back to the news and left to remove it.
-/// Dismissed it is swiped right back to the news. Each has Undo.
+/// it is swiped right to keep it for later and left to remove it, and once
+/// opened it moves to viewed. Kept for later, or viewed, it is swiped right
+/// back to the news and left to remove it. Dismissed it is swiped right back
+/// to the news. Each swipe has Undo.
 
 class DismissibleStory extends StatelessWidget {
   const DismissibleStory({
@@ -64,6 +65,7 @@ class DismissibleStory extends StatelessWidget {
   static const _moves = {
     StoryPlace.news: (StoryPlace.later, StoryPlace.dismissed),
     StoryPlace.later: (StoryPlace.news, StoryPlace.dismissed),
+    StoryPlace.viewed: (StoryPlace.news, StoryPlace.dismissed),
     StoryPlace.dismissed: (StoryPlace.news, null),
   };
 
@@ -75,6 +77,7 @@ class DismissibleStory extends StatelessWidget {
       switch (to) {
         StoryPlace.news => 'Back in the news.',
         StoryPlace.later => 'Kept for later.',
+        StoryPlace.viewed => 'Moved to Viewed.',
         StoryPlace.dismissed => 'Removed from the news.',
       },
       actionLabel: 'Undo',
@@ -94,6 +97,11 @@ class DismissibleStory extends StatelessWidget {
         colours.tertiaryContainer,
         colours.onTertiaryContainer,
         Icons.watch_later_outlined,
+      ),
+      StoryPlace.viewed => (
+        colours.secondaryContainer,
+        colours.onSecondaryContainer,
+        Icons.history,
       ),
       StoryPlace.dismissed => (
         colours.errorContainer,
@@ -133,7 +141,13 @@ class DismissibleStory extends StatelessWidget {
           : _background(context, left, Alignment.centerRight),
       child: Column(
         children: [
-          StoryTile(story: story, now: now),
+          StoryTile(
+            story: story,
+            now: now,
+            onOpened: place == StoryPlace.news
+                ? () => news.move(story, StoryPlace.viewed)
+                : null,
+          ),
           const Divider(height: 1),
         ],
       ),

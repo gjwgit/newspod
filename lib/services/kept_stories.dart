@@ -1,4 +1,4 @@
-/// The stories kept for later.
+/// Stories kept whole, for later or as viewed.
 //
 // Time-stamp: <>
 //
@@ -28,21 +28,27 @@ library;
 import 'package:newspod/models/story.dart';
 import 'package:newspod/services/synced_list.dart';
 
-/// The stories swiped right to read later, kept whole, so they stay after
-/// their feeds drop them, on this device and, when logged in, in later.ttl
-/// on the Pod, so that every device has them.
+/// The stories kept under [name], those swiped right to read later or those
+/// viewed, kept whole, so they stay after their feeds drop them, on this
+/// device and, when logged in, in `<name>.ttl` on the Pod, so that every
+/// device has them. Only the latest [keep] are kept, when given.
 
-class LaterStories extends SyncedList<Story> {
-  LaterStories({super.connected, super.read, super.write})
-    : super(
-        key: 'newspod_later',
-        file: 'later.ttl',
-        keyOf: (story) => story.link,
-        toJson: (story) => story.toJson(),
-        fromJson: (json) => Story.fromJson(json as Map<String, dynamic>),
-      );
+class KeptStories extends SyncedList<Story> {
+  KeptStories({
+    required String name,
+    super.keep,
+    super.connected,
+    super.read,
+    super.write,
+  }) : super(
+         key: 'newspod_$name',
+         file: '$name.ttl',
+         keyOf: (story) => story.link,
+         toJson: (story) => story.toJson(),
+         fromJson: (json) => Story.fromJson(json as Map<String, dynamic>),
+       );
 
-  /// Whether the story at [link] is kept for later.
+  /// Whether the story at [link] is kept here.
 
   bool contains(String link) => containsKey(link);
 
