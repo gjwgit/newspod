@@ -80,12 +80,14 @@ void main() {
 
     await news.dismiss(news.stories.first);
     expect(news.stories.map((s) => s.link), ['one', 'undated']);
+    expect(news.dismissed.map((s) => s.link), ['two']);
 
     await news.refresh();
     expect(news.stories.map((s) => s.link), ['one', 'undated']);
 
     await news.restore(_story('two', 'B', 2));
     expect(news.stories.map((s) => s.link), ['two', 'one', 'undated']);
+    expect(news.dismissed, isEmpty);
   });
 
   test('dismissed stories are remembered on the device', () async {

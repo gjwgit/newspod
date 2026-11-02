@@ -13,9 +13,9 @@ const _rss = """<?xml version="1.0" encoding="UTF-8"?>
     <item>
       <title><![CDATA[Air raid app hacked]]></title>
       <description><![CDATA[<p>Hours later &amp; more.</p>]]></description>
-      <link>https://www.bbc.co.uk/news/articles/one</link>
+      <link>https://example.com/news/one</link>
       <pubDate>Mon, 02 Nov 2026 01:18:27 GMT</pubDate>
-      <media:thumbnail width="240" url="https://ichef.bbci.co.uk/one.jpg"/>
+      <media:thumbnail width="240" url="https://example.com/one.jpg"/>
     </item>
     <item>
       <title>From the guid</title>
@@ -76,7 +76,7 @@ void main() {
     expect(first.source, 'BBC World');
     expect(first.summary, 'Hours later & more.');
     expect(first.published, DateTime.utc(2026, 11, 2, 1, 18, 27));
-    expect(first.imageUrl, 'https://ichef.bbci.co.uk/one.jpg');
+    expect(first.imageUrl, 'https://example.com/one.jpg');
 
     expect(feed.stories[1].link, 'https://example.com/two');
     expect(feed.stories[1].imageUrl, 'https://example.com/two.jpg');

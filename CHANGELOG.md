@@ -23,6 +23,7 @@ Williams](https://togaware.com/Graham.Williams.html).
 
 ## 0.2 Pod Synced News
 
++ Dismissed lists stories swiped away, to swipe back [0.2.1 20261102 gjw]
 + Swipe away stories, feeds and swipes kept on the Pod [0.2.0 20261102 gjw]
 
 ## 0.1 A News Feed

@@ -16,7 +16,8 @@ list down, or tap **Refresh**, for the latest. A new install starts
 with a few well known feeds, ABC News, BBC World, The Guardian and The
 Conversation. Under **Feeds** add any other feed by its address and
 remove any you do not want. Swipe a story left to remove it from the
-news.
+news. **Dismissed** lists the stories removed, while their feeds still
+have them, and a swipe right brings one back.
 
 There is no account, no tracking and no algorithm deciding what you
 see: just the feeds you chose, newest first. Your feeds, and the

@@ -34,10 +34,16 @@ import 'package:newspod/services/news.dart';
 import 'package:newspod/widgets/story_tile.dart';
 
 /// [story] in the news list, with the divider beneath it. Swiped left it is
-/// removed, for good, with Undo to bring it back.
+/// removed, for good, with Undo to bring it back. In the list of [dismissed]
+/// stories it is swiped right instead, to bring it back to the news.
 
 class DismissibleStory extends StatelessWidget {
-  const DismissibleStory({super.key, required this.story, required this.now});
+  const DismissibleStory({
+    super.key,
+    required this.story,
+    required this.now,
+    this.dismissed = false,
+  });
 
   /// The story to show.
 
@@ -47,14 +53,22 @@ class DismissibleStory extends StatelessWidget {
 
   final DateTime now;
 
-  void _dismiss(BuildContext context) {
-    news.dismiss(story);
+  /// Whether the story is listed under Dismissed, to be brought back.
+
+  final bool dismissed;
+
+  void _swiped(BuildContext context) {
+    if (dismissed) {
+      news.restore(story);
+    } else {
+      news.dismiss(story);
+    }
 
     showPositiveSnackBar(
       context,
-      'Removed from the news.',
+      dismissed ? 'Back in the news.' : 'Removed from the news.',
       actionLabel: 'Undo',
-      onAction: () => news.restore(story),
+      onAction: () => dismissed ? news.dismiss(story) : news.restore(story),
     );
   }
 
@@ -64,15 +78,22 @@ class DismissibleStory extends StatelessWidget {
 
     return Dismissible(
       key: ValueKey(story.link),
-      direction: DismissDirection.endToStart,
-      onDismissed: (_) => _dismiss(context),
+      direction: dismissed
+          ? DismissDirection.startToEnd
+          : DismissDirection.endToStart,
+      onDismissed: (_) => _swiped(context),
       background: ColoredBox(
-        color: colours.errorContainer,
+        color: dismissed ? colours.primaryContainer : colours.errorContainer,
         child: Align(
-          alignment: Alignment.centerRight,
+          alignment: dismissed ? Alignment.centerLeft : Alignment.centerRight,
           child: Padding(
-            padding: const EdgeInsets.only(right: 24),
-            child: Icon(Icons.delete_outline, color: colours.onErrorContainer),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Icon(
+              dismissed ? Icons.restore : Icons.delete_outline,
+              color: dismissed
+                  ? colours.onPrimaryContainer
+                  : colours.onErrorContainer,
+            ),
           ),
         ),
       ),

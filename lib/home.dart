@@ -31,12 +31,13 @@ import 'package:solidpod/solidpod.dart' show getWebId;
 import 'package:solidui/solidui.dart';
 
 import 'package:newspod/constants/app.dart';
+import 'package:newspod/screens/dismissed_screen.dart';
 import 'package:newspod/screens/feeds_screen.dart';
 import 'package:newspod/screens/news_screen.dart';
 import 'package:newspod/services/news.dart';
 
-/// The scaffold: the News and Feeds pages, a Refresh button in the app bar,
-/// and the login status for the optional Pod.
+/// The scaffold: the News, Dismissed and Feeds pages, a Refresh button in
+/// the app bar, and the login status for the optional Pod.
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -120,6 +121,15 @@ so every device shows the same feeds and the same stories stay away.
               'Tap one to read it on its own site, or swipe it left to '
               'remove it.',
           child: NewsScreen(),
+        ),
+        SolidMenuItem(
+          title: 'Dismissed',
+          icon: Icons.visibility_off_outlined,
+          tooltip:
+              '**Dismissed**\n\nThe stories swiped out of the news, while '
+              'their feeds still have them. Swipe one right to bring it back '
+              'to the news.',
+          child: DismissedScreen(),
         ),
         SolidMenuItem(
           title: 'Feeds',

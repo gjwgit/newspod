@@ -65,6 +65,11 @@ class News extends ChangeNotifier {
 
   List<Story> stories = const [];
 
+  /// The stories dismissed that the feeds still have, newest first, for
+  /// Dismissed to list and bring back.
+
+  List<Story> dismissed = const [];
+
   /// Why each feed that could not be read failed, by its address.
 
   Map<String, String> errors = const {};
@@ -93,14 +98,20 @@ class News extends ChangeNotifier {
   // The dismissed stories changed, here or from the Pod.
 
   void _reshow() {
-    stories = _shown();
+    _split();
     notifyListeners();
   }
 
-  List<Story> _shown() => [
-    for (final story in _all)
-      if (!_dismissed.contains(story.link)) story,
-  ];
+  void _split() {
+    stories = [
+      for (final story in _all)
+        if (!_dismissed.contains(story.link)) story,
+    ];
+    dismissed = [
+      for (final story in _all)
+        if (_dismissed.contains(story.link)) story,
+    ];
+  }
 
   /// Read every feed again. A refresh asked for while one is running runs
   /// once more when it finishes, so a feed just added is not missed.
@@ -128,7 +139,7 @@ class News extends ChangeNotifier {
       final results = await Future.wait(_feeds.feeds.map(_read));
 
       _all = _merge([for (final r in results) ...r.stories]);
-      stories = _shown();
+      _split();
       errors = {for (final r in results) r.feed.url: ?r.error};
     } while (_again);
 

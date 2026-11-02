@@ -10,7 +10,7 @@ void main() {
   test('JSON written to a file reads back the same', () {
     const json = [
       {'url': 'https://example.com/rss', 'title': 'Say "hello"'},
-      'https://www.bbc.co.uk/news/articles/one?at_medium=RSS&at_campaign=rss',
+      'https://example.com/news/one?at_medium=RSS&at_campaign=rss',
     ];
 
     expect(jsonFromTurtle(jsonTurtle('feeds.ttl', json)), json);

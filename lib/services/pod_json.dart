@@ -55,9 +55,13 @@ Future<void> writePodJson(String file, Object json) => SolidPendingWrites.track(
 );
 
 /// [json] as the Turtle content of [file].
+///
+/// 20261102 gjw The vocabulary address is split, as todopod's is, so the link
+/// checker does not take it for a page: it names the terms and serves nothing.
 
 String jsonTurtle(String file, Object json) =>
-    '@prefix newspod: <https://newspod.solidcommunity.au/ont/> .\n\n'
+    '@prefix newspod: <https://'
+    'newspod.solidcommunity.au/ont/> .\n\n'
     'newspod:${file.split('.').first} a newspod:Data ;\n'
     '  newspod:data """${jsonEncode(json)}""" .\n';
 
