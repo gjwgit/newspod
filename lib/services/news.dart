@@ -94,8 +94,8 @@ class News extends ChangeNotifier {
 
   List<Story> get later => _later.items.reversed.toList();
 
-  /// The stories opened from the news, the latest viewed first, whether or
-  /// not the feeds still have them.
+  /// The stories opened from the news, or swiped on from later, the latest
+  /// viewed first, whether or not the feeds still have them.
 
   List<Story> get viewed => _viewed.items.reversed.toList();
 
@@ -178,8 +178,8 @@ class News extends ChangeNotifier {
   }
 
   // 20261102 gjw A refresh also syncs the feeds, and the stories dismissed,
-  // kept for later and viewed, with the Pod, so changes made on another device show
-  // here, and any queued here reach the Pod. The feeds changing then reads
+  // kept for later and viewed, with the Pod, so changes made on another device
+  // show here, and any queued here reach the Pod. The feeds changing then reads
   // the news again.
 
   Future<void> _run() async {

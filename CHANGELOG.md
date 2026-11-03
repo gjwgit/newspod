@@ -23,6 +23,7 @@ Williams](https://togaware.com/Graham.Williams.html).
 
 ## 0.2 Pod Synced News
 
++ Swipe right under Later moves a story to Viewed [0.2.6 20261103 gjw]
 + Stories opened move from the News to Viewed [0.2.5 20261103 gjw]
 + Swipe a story right to keep it under Later [0.2.4 20261103 gjw]
 + Find feeds by a site's address or by words [0.2.3 20261103 gjw]

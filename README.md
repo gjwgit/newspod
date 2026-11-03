@@ -18,9 +18,10 @@ known feeds, ABC News, BBC World, The Guardian and The Conversation.
 Under **Feeds** find more: give a site's address to list the feeds it
 offers, or words to search for among the feeds followed on Feedly, and
 add those you want. Remove any you do not want. Swipe a story right to
-keep it under **Later**, even after its feed drops it, or left to remove
-it from the news. **Dismissed** lists the stories removed, while their
-feeds still have them, and a swipe right brings one back.
+keep it under **Later**, even after its feed drops it, and swipe it
+right there once read to move it to **Viewed**. Swipe a story left to
+remove it from the news. **Dismissed** lists the stories removed, while
+their feeds still have them, and a swipe right brings one back.
 
 There is no account, no tracking and no algorithm deciding what you see:
 just the feeds you chose, newest first. Your feeds, and the stories you

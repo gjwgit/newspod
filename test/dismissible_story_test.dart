@@ -131,15 +131,20 @@ void main() {
     await _barGone(tester);
   });
 
-  testWidgets('under Later, swiped right the story goes back to the news', (
-    tester,
-  ) async {
+  testWidgets('under Later, swiped right the story moves to Viewed, and '
+      'Undo keeps it for later again', (tester) async {
     await news.move(_story, StoryPlace.later);
     await _show(tester, StoryPlace.later);
     await _swipe(tester, 600);
 
-    expect(find.text('Back in the news.'), findsOneWidget);
+    expect(find.text('Moved to Viewed.'), findsOneWidget);
     expect(await _later(), isEmpty);
+    expect(news.viewed.single.link, _story.link);
+
+    await tester.tap(find.text('Undo'));
+    await tester.pumpAndSettle();
+    expect(await _later(), [_story.link]);
+    expect(news.viewed, isEmpty);
 
     await _barGone(tester);
   });
