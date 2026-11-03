@@ -1,7 +1,7 @@
 name: newspod
 description: "A privacy-first news feed reader."
 publish_to: 'none'
-version: 0.2.6+9
+version: 0.2.7+10
 
 environment:
   sdk: ^3.11.3

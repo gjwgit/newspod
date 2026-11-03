@@ -89,6 +89,9 @@ class _HomeState extends State<Home> {
       statusBar: SolidStatusBarConfig(
         serverInfo: _webId != null ? SolidServerInfo.fromWebId(_webId!) : null,
         loginStatus: SolidLoginStatus(webId: _webId),
+        securityKeyStatus: const SolidSecurityKeyStatus(
+          title: 'NewsPod Security Keys',
+        ),
       ),
       aboutConfig: SolidAboutConfig(
         applicationName: appTitle.replaceAll(' - ', '\n'),
