@@ -23,6 +23,7 @@ Williams](https://togaware.com/Graham.Williams.html).
 
 ## 0.2 Pod Synced News
 
++ Browsers see news from feeds that allow it [0.2.8 20261104 gjw]
 + Show in the status bar whether the secret key is cached [0.2.7 20261103 gjw]
 + Swipe right under Later moves a story to Viewed [0.2.6 20261103 gjw]
 + Stories opened move from the News to Viewed [0.2.5 20261103 gjw]

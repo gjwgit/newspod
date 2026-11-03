@@ -41,4 +41,10 @@ const defaultFeeds = [
     url: 'https://theconversation.com/au/articles.atom',
     title: 'The Conversation',
   ),
+
+  // 20261104 gjw The feeds above fail in a browser (CORS). These send
+  // Access-Control-Allow-Origin: * so a browser still shows some news.
+  Feed(url: 'https://www.wired.com/feed/rss', title: 'WIRED'),
+  Feed(url: 'https://www.nasa.gov/feed/', title: 'NASA'),
+  Feed(url: 'https://github.blog/feed/', title: 'The GitHub Blog'),
 ];
