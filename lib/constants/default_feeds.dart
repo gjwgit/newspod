@@ -1,6 +1,6 @@
 /// The feeds a new install starts with.
 //
-// Time-stamp: <>
+// Time-stamp: <Wednesday 2026-11-04 09:47:27 +1100 Graham Williams>
 //
 /// Copyright (C) 2026, Togaware Pty Ltd
 ///
