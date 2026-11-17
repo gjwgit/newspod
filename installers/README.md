@@ -97,8 +97,8 @@ Then set up your local installation (only required once):
 ln -s ${HOME}/.local/share/newspod/newspod ${HOME}/.local/bin/
 wget https://raw.githubusercontent.com/gjwgit/newspod/dev/installers/app.desktop -O ${HOME}/.local/share/applications/newspod.desktop
 sed -i "s/USER/$(whoami)/g" ${HOME}/.local/share/applications/newspod.desktop
-mkdir -p ${HOME}/.local/share/icons/hicolor/256x256/apps/
-wget https://github.com/gjwgit/newspod/raw/dev/installers/app.png -O ${HOME}/.local/share/icons/hicolor/256x256/apps/newspod.png
+mkdir -p ${HOME}/.local/share/icons/hicolor/512x512/apps/
+wget https://github.com/gjwgit/newspod/raw/dev/assets/images/app_icon_square.png -O ${HOME}/.local/share/icons/hicolor/512x512/apps/newspod.png
 ```
 
 To install for any user on the computer:
@@ -107,7 +107,7 @@ To install for any user on the computer:
 sudo unzip newspod-linux.zip -d /opt/newspod
 sudo ln -s /opt/newspod/newspod /usr/local/bin/
 wget https://raw.githubusercontent.com/gjwgit/newspod/dev/installers/app.desktop -O ${HOME}/usr/local/share/applications/newspod.desktop
-wget https://github.com/gjwgit/newspod/raw/dev/installers/app.png -O ${HOME}/use/local/share/icons/newspod.png
+wget https://github.com/gjwgit/newspod/raw/dev/assets/images/app_icon_square.png -O ${HOME}/use/local/share/icons/newspod.png
 ```
 
 Once installed you can run the app from the GNOME desktop through
